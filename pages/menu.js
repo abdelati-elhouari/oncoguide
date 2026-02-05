@@ -79,3 +79,22 @@ document.getElementById("btnChangeLang").addEventListener("click", () => {
   localStorage.removeItem("oncoguid_lang");
   window.location.href = "../index.html"; // adapte si ton index est ailleurs
 });
+function initNav(langPack)
+{
+  document.getElementById("navHome").textContent = langPack.nav.home;
+  document.getElementById("navAbout").textContent = langPack.nav.about;
+  document.getElementById("navContact").textContent = langPack.nav.contact;
+
+  const burger = document.getElementById("navBurger");
+  const links = document.getElementById("navLinks");
+  burger?.addEventListener("click", () => links.classList.toggle("open"));
+
+  const sel = document.getElementById("langSelect");
+  const current = localStorage.getItem("oncoguid_lang") || "fr";
+  sel.value = current;
+
+  sel.addEventListener("change", () => {
+    localStorage.setItem("oncoguid_lang", sel.value);
+    window.location.reload();
+  });
+}
