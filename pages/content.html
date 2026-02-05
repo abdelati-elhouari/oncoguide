@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="fr" dir="ltr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -20,9 +20,14 @@
 
       <nav class="nav-links" id="navLinks">
         <a class="nav-link" href="./menu.html" id="navHome">Menu</a>
-        <a class="nav-link" href="./menu.html" id="navAbout">About</a>
-        <a class="nav-link" href="./menu.html" id="navContact">Contact</a>
-        <button class="nav-btn" id="btnChangeLang">Change language</button>
+        <a class="nav-link" href="./menu.html#about" id="navAbout">About</a>
+        <a class="nav-link" href="./menu.html#contact" id="navContact">Contact</a>
+
+        <select id="langSelect" class="lang-select" aria-label="Language">
+          <option value="fr">Français</option>
+          <option value="ar">العربية</option>
+          <option value="en">English</option>
+        </select>
       </nav>
     </header>
 
@@ -34,6 +39,15 @@
 
   </div>
 
-  <script src="content.js"></script>
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="./content.js"></script>
 </body>
 </html>
