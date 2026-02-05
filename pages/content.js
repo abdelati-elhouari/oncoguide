@@ -1,72 +1,224 @@
-// i18n
-const lang = localStorage.getItem("oncoguid_lang") || "ar";
+// ---- helpers ----
+function getLang() {
+  return localStorage.getItem("oncoguid_lang") || "fr";
+}
 
-const TXT = {
-  ar: {
-    title: "رحلة العلاج",
-    hint: "اضغط على أي خيار لعرض معلوماته.",
-    centerNote: "رحمة أمحج",
-    navHome: "الرئيسية",
-    navAbout: "حول",
-    navContact: "اتصل بنا",
-    change: "تغيير اللغة",
-    nodes: ["الجراحة", "العلاج الكيميائي", "العلاج الموجه", "العلاج الهرموني", "العلاج المناعي", "العلاج الإشعاعي"]
-  },
+function getTopic() {
+  const p = new URLSearchParams(window.location.search);
+  return p.get("topic") || "treatment";
+}
+
+function setHtmlLangDir(lang) {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+}
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+
+// ---- i18n content (WHEEL-ONLY for every pill) ----
+const DB = {
   fr: {
-    title: "Parcours de traitement",
-    hint: "Clique sur un élément pour afficher ses informations.",
-    centerNote: "OncoGuide",
-    navHome: "Accueil",
-    navAbout: "À propos",
-    navContact: "Contact",
-    change: "Changer la langue",
-    nodes: ["Chirurgie", "Chimiothérapie", "Thérapie ciblée", "Hormonothérapie", "Immunothérapie", "Radiothérapie"]
+    nav: { home: "Menu", about: "À propos", contact: "Contact", change: "Changer la langue" },
+    topics: {
+      "breast-cancer": {
+        title: "Cancer du sein",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Comprendre", "Signes", "Facteurs de risque", "Diagnostic", "Stades", "Questions à poser"]
+      },
+      "treatment": {
+        title: "Parcours de traitement",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Chirurgie", "Chimiothérapie", "Thérapie ciblée", "Hormonothérapie", "Immunothérapie", "Radiothérapie"]
+      },
+      "nutrition": {
+        title: "Nutrition",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Conseils généraux", "Protéines", "Hydratation", "Hygiène alimentaire", "Perte d’appétit", "Questions à poser"]
+      },
+      "fertility": {
+        title: "Fertilité",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Pourquoi important", "Quand en parler", "Options", "Questions", "Soutien", "Ressources"]
+      },
+      "screening": {
+        title: "Dépistage",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Objectif", "Examens", "Préparation", "Résultats", "Quand consulter", "Questions"]
+      },
+      "media": {
+        title: "Supports audio visuels éducatifs",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Vidéos", "Audios", "PDF", "FAQ", "Témoignages", "Liens utiles"]
+      }
+    }
   },
+
   en: {
-    title: "Treatment Journey",
-    hint: "Click an item to see its information.",
-    centerNote: "OncoGuide",
-    navHome: "Home",
-    navAbout: "About",
-    navContact: "Contact",
-    change: "Change language",
-    nodes: ["Surgery", "Chemotherapy", "Targeted therapy", "Hormone therapy", "Immunotherapy", "Radiotherapy"]
+    nav: { home: "Menu", about: "About", contact: "Contact", change: "Change language" },
+    topics: {
+      "breast-cancer": {
+        title: "Breast Cancer",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Overview", "Signs", "Risk factors", "Diagnosis", "Stages", "Questions"]
+      },
+      "treatment": {
+        title: "Treatment Journey",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Surgery", "Chemotherapy", "Targeted therapy", "Hormone therapy", "Immunotherapy", "Radiotherapy"]
+      },
+      "nutrition": {
+        title: "Nutrition",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["General tips", "Protein", "Hydration", "Food safety", "Low appetite", "Questions"]
+      },
+      "fertility": {
+        title: "Fertility",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Why it matters", "When to discuss", "Options", "Questions", "Support", "Resources"]
+      },
+      "screening": {
+        title: "Screening",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Purpose", "Tests", "Preparation", "Results", "When to see a doctor", "Questions"]
+      },
+      "media": {
+        title: "Educational Media",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["Videos", "Audio", "PDF", "FAQ", "Stories", "Useful links"]
+      }
+    }
+  },
+
+  ar: {
+    nav: { home: "القائمة", about: "حول", contact: "اتصل بنا", change: "تغيير اللغة" },
+    topics: {
+      "breast-cancer": {
+        title: "سرطان الثدي",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["نظرة عامة", "العلامات", "عوامل الخطورة", "التشخيص", "المراحل", "أسئلة للطبيب"]
+      },
+      "treatment": {
+        title: "رحلة العلاج",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["الجراحة", "العلاج الكيميائي", "العلاج الموجه", "العلاج الهرموني", "العلاج المناعي", "العلاج الإشعاعي"]
+      },
+      "nutrition": {
+        title: "التغذية",
+        wheelCenter: "OncoGuide",
+         
+        wheelNodes: ["نصائح عامة", "البروتين", "الترطيب", "سلامة الغذاء", "فقدان الشهية", "أسئلة للطبيب"]
+      },
+      "fertility": {
+        title: "الخصوبة",
+        wheelCenter: "OncoGuide",
+      
+        wheelNodes: ["لماذا مهم؟", "متى أتحدث؟", "خيارات", "أسئلة", "الدعم", "موارد"]
+      },
+      "screening": {
+        title: "الكشف المبكر",
+        wheelCenter: "OncoGuide",
+        
+        wheelNodes: ["الهدف", "الفحوصات", "التحضير", "النتائج", "متى أراجع الطبيب؟", "أسئلة مهمة"]
+      },
+      "media": {
+        title: "محتوى مرئي و مسموع",
+        wheelCenter: "OncoGuide",
+    
+        wheelNodes: ["فيديوهات", "صوتيات", "PDF", "أسئلة وأجوبة", "قصص", "روابط مفيدة"]
+      }
+    }
   }
 };
 
-const t = TXT[lang] || TXT.ar;
+// ---- renderer (wheel) ----
+function renderWheel(root, centerText, nodes, hintText, topic) {
+  const wheel = el("section", "wheel");
+  const ring = el("div", "ring");
+  wheel.appendChild(ring);
 
-// Apply html lang/dir
-document.documentElement.lang = lang;
-document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+  const center = el("div", "center");
+  const img = el("img", "ribbon");
+  img.src = "../images/logo.jpeg";
+  img.alt = "Ribbon";
+  center.appendChild(img);
+  center.appendChild(el("div", "center-note", centerText));
+  wheel.appendChild(center);
 
-// Navbar text
-document.getElementById("navHome").textContent = t.navHome;
-document.getElementById("navAbout").textContent = t.navAbout;
-document.getElementById("navContact").textContent = t.navContact;
-document.getElementById("btnChangeLang").textContent = t.change;
+  // 6 positions like your design
+  const pos = ["n1","n2","n3","n4","n5","n6"];
 
-// Page text
-document.getElementById("title").textContent = t.title;
-document.getElementById("hint").textContent = t.hint;
-document.getElementById("centerNote").textContent = t.centerNote;
+  pos.forEach((p, i) => {
+    const label = nodes[i] || "";
+    const btn = el("button", `node ${p}`, label);
+    btn.type = "button";
 
-// Nodes
-["n1","n2","n3","n4","n5","n6"].forEach((id, i) => {
-  const el = document.getElementById(id);
-  el.textContent = t.nodes[i];
-  el.addEventListener("click", () => {
-    alert(t.nodes[i]);
+    // When click: open same content page but with subtopic (optional)
+    // Example: content.html?topic=treatment&item=0
+    btn.addEventListener("click", () => {
+      const url = new URL(window.location.href);
+      url.searchParams.set("topic", topic);
+      url.searchParams.set("item", String(i));
+      window.location.href = url.toString();
+    });
+
+    wheel.appendChild(btn);
   });
-});
 
-// Burger
-const burger = document.getElementById("navBurger");
-const links = document.getElementById("navLinks");
-burger.addEventListener("click", () => links.classList.toggle("open"));
+  root.appendChild(wheel);
+  root.appendChild(el("p", "hint", hintText));
+}
 
-// Change language
-document.getElementById("btnChangeLang").addEventListener("click", () => {
-  localStorage.removeItem("oncoguid_lang");
-  window.location.href = "../index.html"; // adapte si besoin
-});
+// ---- navbar handlers ----
+function initNav(langPack) {
+  document.getElementById("navHome").textContent = langPack.nav.home;
+  document.getElementById("navAbout").textContent = langPack.nav.about;
+  document.getElementById("navContact").textContent = langPack.nav.contact;
+  document.getElementById("btnChangeLang").textContent = langPack.nav.change;
+
+  const burger = document.getElementById("navBurger");
+  const links = document.getElementById("navLinks");
+  burger.addEventListener("click", () => links.classList.toggle("open"));
+
+  document.getElementById("btnChangeLang").addEventListener("click", () => {
+    localStorage.removeItem("oncoguid_lang");
+    window.location.href = "../index.html";
+  });
+}
+
+// ---- main ----
+(function main(){
+  const lang = getLang();
+  const topic = getTopic();
+  const pack = DB[lang] || DB.fr;
+
+  setHtmlLangDir(lang);
+  initNav(pack);
+
+  const page = pack.topics[topic] || pack.topics["treatment"];
+  document.getElementById("title").textContent = page.title;
+
+  const root = document.getElementById("contentRoot");
+  root.innerHTML = "";
+
+  // Render wheel for ALL topics (no paragraphs)
+  renderWheel(root, page.title, page.wheelNodes, page.wheelHint, topic);
+})();
