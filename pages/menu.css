@@ -272,3 +272,15 @@ body{
 [dir="rtl"] .nav{ direction: rtl; }
 [dir="rtl"] .hero{ text-align:center; } /* on garde le titre centré */
 [dir="rtl"] .pill{ font-weight:400; }
+.lang-select{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid #ededed;
+  background:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+
+@media (max-width: 900px){
+  .lang-select{ width:100%; }
+}
